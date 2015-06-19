@@ -2,6 +2,7 @@ package sample.VisitInformation.SiteActions;
 
 import sample.VisitInformation.SiteAction;
 import sample.VisitInformation.SiteActionType;
+import sample.WrongSiteActionTypeException;
 
 import java.util.Date;
 
@@ -11,10 +12,15 @@ public class SiteActionFactory {
         String[] data = string.split(" ");
         SiteActionType siteActionType = SiteActionType.valueOf(data[0]);
         Date date = new Date(Long.parseLong(data[1]));
-        return get(siteActionType,date, data[2]);
+        try {
+            return get(siteActionType,date, data[2]);
+        } catch (WrongSiteActionTypeException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    public static SiteAction get(SiteActionType siteActionType, Date date, String productName) {
+    public static SiteAction get(SiteActionType siteActionType, Date date, String productName) throws WrongSiteActionTypeException {
         switch (siteActionType) {
             case CALL:
                 return new SiteActionCall(date);
@@ -23,7 +29,7 @@ public class SiteActionFactory {
             case PURCHASE:
                 return new SiteActionPurchase(date, productName);
             default:
-                return null;
+                throw new WrongSiteActionTypeException("Wrong site action type!");
         }
     }
 }

@@ -118,21 +118,26 @@ public class Main extends Application {
             visit.setWhenInformation(whenInformation);
             int actCount = random.nextInt(5) + 1;
             for (int j = 0; j < actCount; j++) {
-                switch (random.nextInt(3)) {
-                    case 0: {
-                        visit.getSiteActions().add(SiteActionFactory.get(SiteActionType.CALL, new Date((0)), null));
+                try {
+                    switch (random.nextInt(3)) {
+                        case 0: {
+                            visit.getSiteActions().add(SiteActionFactory.get(SiteActionType.CALL, new Date((0)), null));
+                        }
+                        break;
+                        case 1: {
+                            visit.getSiteActions().add(SiteActionFactory.get(SiteActionType.PRODUCTPAGEENTER, new Date((0)), "Product#" + random.nextInt(100) + 1));
+                        }
+                        break;
+                        case 2: {
+                            String product = "Product#" + random.nextInt(100) + 1;
+                            visit.getSiteActions().add(SiteActionFactory.get(SiteActionType.PRODUCTPAGEENTER, new Date((0)), product));
+                            visit.getSiteActions().add(SiteActionFactory.get(SiteActionType.PURCHASE, new Date((0)), product));
+                        }
+                        break;
                     }
-                    break;
-                    case 1: {
-                        visit.getSiteActions().add(SiteActionFactory.get(SiteActionType.PRODUCTPAGEENTER, new Date((0)), "Product#" + random.nextInt(100) + 1));
-                    }
-                    break;
-                    case 2: {
-                        String product = "Product#" + random.nextInt(100) + 1;
-                        visit.getSiteActions().add(SiteActionFactory.get(SiteActionType.PRODUCTPAGEENTER, new Date((0)), product));
-                        visit.getSiteActions().add(SiteActionFactory.get(SiteActionType.PURCHASE, new Date((0)), product));
-                    }
-                    break;
+                }
+                catch (WrongSiteActionTypeException e) {
+                    e.printStackTrace();
                 }
             }
             if (fileOutputStream != null) {
